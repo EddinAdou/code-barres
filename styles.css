@@ -78,6 +78,26 @@ nav {
     font-weight: bold;
 }
 
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #e7dcdc;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    margin-right: 2px;
+}
+
+.active-tab {
+    background-color: #ecdcdc;
+    border-bottom: 2px solid #fff;
+    font-weight: bold;
+    color: #4285f4; /* Couleur bleue pour l'onglet actif */
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
 /* Conteneur principal */
 .container {
     max-width: 1200px;
