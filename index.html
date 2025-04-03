@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Codes d'Identification</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bibliothèques externes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Configuration Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        danger: '#EF4444',
+                        dark: '#1E293B',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- En-tête -->
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-dark mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Générateur de Codes d'Identification
+        </h1>
+        <p class="text-gray-600 text-lg">Créez facilement des QR codes ou codes-barres pour vos besoins d'identification</p>
+    </div>
+
+    <!-- Onglets principaux -->
+    <div class="mb-8">
+        <div class="flex border-b border-gray-200">
+            <button id="qrCodeTab" class="py-3 px-6 font-medium text-lg rounded-t-lg bg-primary text-white">
+                QR Code
+            </button>
+            <button id="barcodeTab" class="py-3 px-6 font-medium text-lg rounded-t-lg bg-gray-200 text-gray-700 ml-2">
+                Code-barres
+            </button>
+        </div>
+    </div>
+
+    <!-- Carte principale -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <!-- Sélecteur de type pour QR Code -->
+        <div id="qrCodeSection">
+            <div class="mb-6">
+                <label for="qrCodeType" class="block text-sm font-medium text-gray-700 mb-1">
+                    Type de QR Code
+                </label>
+                <select id="qrCodeType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option value="text">Texte simple</option>
+                    <option value="wifi">Configuration Wi-Fi</option>
+                    <option value="vcard">Carte de visite</option>
+                    <option value="url">URL</option>
+                    <option value="email">Email</option>
+                </select>
+            </div>
+
+            <!-- Section dynamique qui changera selon le type choisi -->
+            <div id="qrCodeFormFields">
+                <!-- Les champs seront injectés ici dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Sélecteur de type pour Code-barres -->
+        <div id="barcodeSection" class="hidden">
+            <div class="mb-6">
+                <label for="barcodeType" class="block text-sm font-medium text-gray-700 mb-1">
+                    Type de Code-barres
+                </label>
+                <select id="barcodeType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option value="ean13">EAN-13 (articles de magasin)</option>
+                    <option value="code128">Code 128 (général)</option>
+                    <option value="code39">Code 39 (industrie)</option>
+                    <option value="upc">UPC (produits américains)</option>
+                </select>
+            </div>
+
+            <!-- Section dynamique qui changera selon le type choisi -->
+            <div id="barcodeFormFields">
+                <!-- Les champs seront injectés ici dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Section d'aperçu et de téléchargement -->
+        <div class="mt-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-dark">Aperçu</h3>
+                <button id="generateButton" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition">
+                    Générer
+                </button>
+            </div>
+
+            <div id="codePreview" class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 min-h-[200px]">
+                <p class="text-gray-500">L'aperçu apparaîtra ici</p>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+                <button id="downloadPNG" class="px-4 py-2 bg-secondary text-white rounded-md hover:bg-green-600 transition">
+                    Télécharger PNG
+                </button>
+                <button id="downloadPDF" class="px-4 py-2 bg-accent text-white rounded-md hover:bg-purple-600 transition">
+                    Télécharger PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-12 py-6 text-center text-gray-500 text-sm">
+    <p>© 2025 by Eddin :  Générateur de Codes d'Identification - Créé pour simplifier vos connexions</p>
+</footer>
+
+<!-- Scripts JS -->
+<script src="scripts/qrGenerator.js"></script>
+<script src="scripts/barcodeGenerator.js"></script>
+<script src="scripts/pdfGenerator.js"></script>
+<script src="scripts/uiController.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
