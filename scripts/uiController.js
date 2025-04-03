@@ -38,10 +38,28 @@ const UIController = (function() {
 
     const barcodeFormFields = {
         ean13: [
-            { id: 'productCode', label: 'Code produit (12 chiffres)', type: 'text', placeholder: 'Entrez le code produit (le 13e chiffre sera calculé automatiquement)', pattern: '[0-9]{12}' },
-            { id: 'productName', label: 'Nom du produit', type: 'text', placeholder: 'Entrez le nom du produit (optionnel)' }
+            { id: 'productCode', label: 'Code EAN / UPC (identifiant unique)', type: 'text', placeholder: 'Entrez le code produit (12 chiffres)', pattern: '[0-9]{12}', required: true },
+            { id: 'productName', label: 'Nom du produit', type: 'text', placeholder: 'Entrez le nom du produit', required: true },
+            { id: 'brand', label: 'Marque', type: 'text', placeholder: 'Entrez la marque du produit' },
+            { id: 'category', label: 'Catégorie', type: 'select', options: [
+                    { value: 'alimentaire', label: 'Alimentaire' },
+                    { value: 'electronique', label: 'Électronique' },
+                    { value: 'vetements', label: 'Vêtements' },
+                    { value: 'hygiene', label: 'Hygiène et beauté' },
+                    { value: 'menage', label: 'Produits ménagers' },
+                    { value: 'autre', label: 'Autre' }
+                ]},
+            { id: 'price', label: 'Prix', type: 'number', placeholder: 'Prix du produit', step: '0.01', min: '0' },
+            { id: 'weight', label: 'Poids / Volume', type: 'text', placeholder: 'Ex: 500g, 1L, etc.' },
+            { id: 'description', label: 'Description courte', type: 'textarea', placeholder: 'Brève description du produit' },
+            { id: 'expiryDate', label: 'Date d\'expiration', type: 'date', placeholder: 'Pour les produits périssables' },
+            { id: 'sku', label: 'Référence interne (SKU)', type: 'text', placeholder: 'Référence interne du magasin' },
+            { id: 'country', label: 'Pays d\'origine', type: 'text', placeholder: 'Pays de fabrication du produit' },
+            { id: 'manufacturer', label: 'Fournisseur / Fabricant', type: 'text', placeholder: 'Nom du fabricant ou fournisseur' },
+            { id: 'vatRate', label: 'Taux de TVA (%)', type: 'number', placeholder: 'Ex: 20, 5.5, etc.', step: '0.1', min: '0' }
         ],
         code128: [
+            // Les autres types de codes-barres restent inchangés
             { id: 'codeData', label: 'Données', type: 'text', placeholder: 'Entrez les données à encoder' }
         ],
         code39: [
@@ -55,18 +73,17 @@ const UIController = (function() {
     // Génère le HTML pour un champ de formulaire
     function createFormField(field) {
         const fieldContainer = document.createElement('div');
-        fieldContainer.className = 'mb-4';
+        fieldContainer.className = 'form-group';
 
         const label = document.createElement('label');
         label.setAttribute('for', field.id);
-        label.className = 'block text-sm font-medium text-gray-700 mb-1';
         label.textContent = field.label;
         fieldContainer.appendChild(label);
 
         if (field.type === 'select') {
             const select = document.createElement('select');
             select.id = field.id;
-            select.className = 'w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary';
+            select.className = 'form-control';
 
             field.options.forEach(option => {
                 const optElement = document.createElement('option');
@@ -79,15 +96,15 @@ const UIController = (function() {
         } else if (field.type === 'textarea') {
             const textarea = document.createElement('textarea');
             textarea.id = field.id;
-            textarea.className = 'w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary';
+            textarea.className = 'form-control';
             textarea.placeholder = field.placeholder || '';
-            textarea.rows = 3;
+            textarea.rows = 4;
             fieldContainer.appendChild(textarea);
         } else {
             const input = document.createElement('input');
             input.type = field.type;
             input.id = field.id;
-            input.className = 'w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary';
+            input.className = 'form-control';
             input.placeholder = field.placeholder || '';
 
             if (field.pattern) {
@@ -100,7 +117,7 @@ const UIController = (function() {
         return fieldContainer;
     }
 
-    // API publique du module
+    // API publique
     return {
         initialize: function() {
             this.switchTab('qrCode');
@@ -110,20 +127,20 @@ const UIController = (function() {
             activeTab = tab;
 
             // Mise à jour des onglets
-            document.getElementById('qrCodeTab').className = tab === 'qrCode'
-                ? 'py-3 px-6 font-medium text-lg rounded-t-lg bg-primary text-white'
-                : 'py-3 px-6 font-medium text-lg rounded-t-lg bg-gray-200 text-gray-700 ml-2';
+            if (tab === 'qrCode') {
+                document.getElementById('qrCodeTab').className = 'nav-tab active';
+                document.getElementById('barcodeTab').className = 'nav-tab';
+                document.getElementById('qrCodeSection').style.display = 'block';
+                document.getElementById('barcodeSection').style.display = 'none';
+            } else {
+                document.getElementById('qrCodeTab').className = 'nav-tab';
+                document.getElementById('barcodeTab').className = 'nav-tab active';
+                document.getElementById('qrCodeSection').style.display = 'none';
+                document.getElementById('barcodeSection').style.display = 'block';
+            }
 
-            document.getElementById('barcodeTab').className = tab === 'barcode'
-                ? 'py-3 px-6 font-medium text-lg rounded-t-lg bg-primary text-white ml-2'
-                : 'py-3 px-6 font-medium text-lg rounded-t-lg bg-gray-200 text-gray-700 ml-2';
-
-            // Affichage de la section appropriée
-            document.getElementById('qrCodeSection').style.display = tab === 'qrCode' ? 'block' : 'none';
-            document.getElementById('barcodeSection').style.display = tab === 'barcode' ? 'block' : 'none';
-
-            // Réinitialiser la section d'aperçu
-            document.getElementById('codePreview').innerHTML = '<p class="text-gray-500">L\'aperçu apparaîtra ici</p>';
+            // Réinitialiser l'aperçu
+            document.getElementById('codePreview').innerHTML = '';
         },
 
         getActiveTab: function() {
@@ -153,11 +170,14 @@ const UIController = (function() {
         },
 
         getFormData: function(containerId) {
-            const container = document.getElementById(containerId);
             const formData = {};
+            const container = document.getElementById(containerId);
 
-            // Collecter les données de tous les inputs dans le conteneur
-            container.querySelectorAll('input, select, textarea').forEach(input => {
+            if (!container) return formData;
+
+            // Collecter les valeurs de tous les champs
+            const inputs = container.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
                 formData[input.id] = input.value;
             });
 
