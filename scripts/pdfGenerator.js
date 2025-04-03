@@ -79,94 +79,98 @@ const PDFGenerator = (function() {
             doc.save('qrcode.pdf');
         },
 
-        generateBarcodePDF: function(barcodeData) {
-            if (!barcodeData) return;
+        generateBarcodePDF: function(data) {
+            if (!data) return;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            // Titre du document
-            doc.setFontSize(16);
-            doc.text("Code-barres", 105, 20, { align: "center" });
+            // Titre
+            doc.setFontSize(18);
+            doc.text('Code-barres produit', 105, 20, { align: 'center' });
 
-            // Type de code-barres
+            // Ajout de l'image du code-barres
+            const canvas = document.getElementById('barcodeCanvas');
+            if (canvas) {
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                doc.addImage(imgData, 'JPEG', 55, 30, 100, 50);
+            }
+
+            // Informations du produit
             doc.setFontSize(12);
-            doc.text(`Type: ${barcodeData.type.toUpperCase()}`, 20, 30);
+            let y = 90;
 
-            // Ajouter l'image du code-barres
-            const barcodeImage = document.getElementById('barcodeImage');
-            if (barcodeImage) {
-                const imgData = barcodeImage.src;
-                doc.addImage(imgData, 'PNG', 50, 40, 110, 60);
+            if (data.type === 'ean13' && data.formData) {
+                const formData = data.formData;
+
+                doc.setFont(undefined, 'bold');
+                doc.text(`Code EAN-13: ${data.data}`, 20, y);
+                y += 10;
+
+                if (formData.productName) {
+                    doc.text(`Nom du produit: ${formData.productName}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.brand) {
+                    doc.text(`Marque: ${formData.brand}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.category) {
+                    doc.text(`Catégorie: ${formData.category}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.price) {
+                    doc.text(`Prix: ${formData.price} €`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.weight) {
+                    doc.text(`Poids/Volume: ${formData.weight}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.sku) {
+                    doc.text(`Référence: ${formData.sku}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.country) {
+                    doc.text(`Pays d'origine: ${formData.country}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.manufacturer) {
+                    doc.text(`Fabricant: ${formData.manufacturer}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.vatRate) {
+                    doc.text(`TVA: ${formData.vatRate}%`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.expiryDate) {
+                    doc.text(`Date d'expiration: ${formData.expiryDate}`, 20, y);
+                    y += 7;
+                }
+
+                if (formData.description) {
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`Description:`, 20, y);
+                    y += 7;
+                    doc.setFont(undefined, 'normal');
+
+                    // Découper la description en lignes
+                    const splitDescription = doc.splitTextToSize(formData.description, 170);
+                    doc.text(splitDescription, 20, y);
+                }
             }
 
-            // Ajouter les détails
-            doc.setFontSize(10);
-            doc.text("Données:", 20, 110);
-            doc.text(barcodeData.data, 20, 117, { maxWidth: 170 });
-
-            // Options utilisées
-            doc.text("Options:", 20, 130);
-            let yPos = 137;
-
-            if (barcodeData.options) {
-                if (barcodeData.options.width) {
-                    doc.text(`Largeur: ${barcodeData.options.width}`, 20, yPos);
-                    yPos += 7;
-                }
-                if (barcodeData.options.height) {
-                    doc.text(`Hauteur: ${barcodeData.options.height}`, 20, yPos);
-                    yPos += 7;
-                }
-                if (barcodeData.options.displayValue !== undefined) {
-                    doc.text(`Affichage de la valeur: ${barcodeData.options.displayValue ? 'Oui' : 'Non'}`, 20, yPos);
-                    yPos += 7;
-                }
-                if (barcodeData.options.text) {
-                    doc.text(`Texte personnalisé: ${barcodeData.options.text}`, 20, yPos);
-                    yPos += 7;
-                }
-            }
-
-            // Pied de page avec date de génération
-            const today = new Date();
-            const formattedDate = today.toLocaleDateString('fr-FR');
-            doc.setFontSize(8);
-            doc.text(`Généré le ${formattedDate}`, 105, 280, { align: "center" });
-
-            // Enregistrer le PDF
-            doc.save('barcode.pdf');
-        },
-
-        // Fonction générique pour télécharger n'importe quelle image comme PDF
-        generateImagePDF: function(imageId, title) {
-            const image = document.getElementById(imageId);
-            if (!image) return;
-
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Titre du document
-            doc.setFontSize(16);
-            doc.text(title || "Image", 105, 20, { align: "center" });
-
-            // Ajouter l'image
-            const imgData = image.src || image.toDataURL('image/png');
-
-            // Calculer les dimensions pour adapter l'image à la page
-            const imgWidth = 170;
-            const imgHeight = image.height * (imgWidth / image.width);
-
-            doc.addImage(imgData, 'PNG', 20, 30, imgWidth, imgHeight);
-
-            // Pied de page avec date de génération
-            const today = new Date();
-            const formattedDate = today.toLocaleDateString('fr-FR');
-            doc.setFontSize(8);
-            doc.text(`Généré le ${formattedDate}`, 105, 280, { align: "center" });
-
-            // Enregistrer le PDF
-            doc.save('image.pdf');
+            // Télécharger le PDF
+            doc.save(`barcode-${data.type}.pdf`);
         }
     };
 })();
