@@ -47,6 +47,7 @@ const BarcodeGenerator = (function() {
                         return;
                     }
                     break;
+                // Autres cas inchangés
                 case 'code128':
                     barcodeData = formData.codeData;
                     break;
@@ -76,12 +77,26 @@ const BarcodeGenerator = (function() {
             // Générer le code-barres
             JsBarcode('#barcodeCanvas', barcodeData, options);
 
-            // Ajouter une légende si un nom de produit est fourni
-            if (formData.productName) {
-                const caption = document.createElement('p');
-                caption.className = 'text-sm text-gray-600 mt-2 text-center';
-                caption.textContent = formData.productName;
-                container.appendChild(caption);
+            // Ajouter les informations du produit si disponibles
+            if (type === 'ean13' && formData.productName) {
+                const productInfo = document.createElement('div');
+                productInfo.className = 'product-info mt-4 p-3 bg-gray-50 rounded-md';
+
+                let infoHTML = `<h3 class="font-bold text-lg">${formData.productName}</h3>`;
+
+                if (formData.brand) infoHTML += `<p><strong>Marque:</strong> ${formData.brand}</p>`;
+                if (formData.category) infoHTML += `<p><strong>Catégorie:</strong> ${formData.category}</p>`;
+                if (formData.price) infoHTML += `<p><strong>Prix:</strong> ${formData.price} €</p>`;
+                if (formData.weight) infoHTML += `<p><strong>Poids/Volume:</strong> ${formData.weight}</p>`;
+                if (formData.description) infoHTML += `<p><strong>Description:</strong> ${formData.description}</p>`;
+                if (formData.expiryDate) infoHTML += `<p><strong>Date d'expiration:</strong> ${formData.expiryDate}</p>`;
+                if (formData.sku) infoHTML += `<p><strong>Réf. interne:</strong> ${formData.sku}</p>`;
+                if (formData.country) infoHTML += `<p><strong>Origine:</strong> ${formData.country}</p>`;
+                if (formData.manufacturer) infoHTML += `<p><strong>Fabricant:</strong> ${formData.manufacturer}</p>`;
+                if (formData.vatRate) infoHTML += `<p><strong>TVA:</strong> ${formData.vatRate}%</p>`;
+
+                productInfo.innerHTML = infoHTML;
+                container.appendChild(productInfo);
             }
         },
 
