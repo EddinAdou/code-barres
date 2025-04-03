@@ -123,21 +123,29 @@ const UIController = (function() {
             this.switchTab('qrCode');
         },
 
-        switchTab: function(tab) {
-            activeTab = tab;
+        // Dans UIController.js, méthode switchTab
+        switchTab: function(tabName) {
+            const qrCodeTab = document.getElementById('qrCodeTab');
+            const barcodeTab = document.getElementById('barcodeTab');
+            const qrCodeSection = document.getElementById('qrCodeSection');
+            const barcodeSection = document.getElementById('barcodeSection');
 
-            // Mise à jour des onglets
-            if (tab === 'qrCode') {
-                document.getElementById('qrCodeTab').className = 'nav-tab active';
-                document.getElementById('barcodeTab').className = 'nav-tab';
-                document.getElementById('qrCodeSection').style.display = 'block';
-                document.getElementById('barcodeSection').style.display = 'none';
+            // Réinitialiser tous les onglets
+            qrCodeTab.classList.remove('active-tab');
+            barcodeTab.classList.remove('active-tab');
+            qrCodeSection.style.display = 'none';
+            barcodeSection.style.display = 'none';
+
+            // Activer l'onglet sélectionné
+            if (tabName === 'qrCode') {
+                qrCodeTab.classList.add('active-tab');
+                qrCodeSection.style.display = 'block';
             } else {
-                document.getElementById('qrCodeTab').className = 'nav-tab';
-                document.getElementById('barcodeTab').className = 'nav-tab active';
-                document.getElementById('qrCodeSection').style.display = 'none';
-                document.getElementById('barcodeSection').style.display = 'block';
+                barcodeTab.classList.add('active-tab');
+                barcodeSection.style.display = 'block';
             }
+
+            activeTab = tabName;
 
             // Réinitialiser l'aperçu
             document.getElementById('codePreview').innerHTML = '';
