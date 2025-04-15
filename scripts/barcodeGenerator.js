@@ -65,6 +65,42 @@ const BarcodeGenerator = (function() {
                         return;
                     }
                     break;
+                case 'gcmConnexion':
+                    // Récupération des données pour GCM Connexion
+                    const employeeId = formData.employeeId;
+                    const employeePassword = formData.employeePassword;
+
+                    if (!employeeId || !employeePassword) {
+                        container.innerHTML = '<p class="text-danger">Matricule et mot de passe requis pour générer le code-barres.</p>';
+                        return;
+                    }
+
+                    // Structurer les données sous la forme : matricule;motdepasse
+                    barcodeData = `${employeeId};${employeePassword}`;
+                    // Effacer la zone d'affichage
+                    container.innerHTML = '';
+
+                    // Créer un canvas pour le code-barres
+                    const canvas = document.createElement('canvas');
+                    canvas.id = 'barcodeCanvas';
+                    container.appendChild(canvas);
+
+                    // Générer le Code-barres
+                    JsBarcode(canvas, barcodeData, {
+                        format: "CODE128",
+                        displayValue: true, // Affiche le texte sous le Code-barres
+                        fontSize: 18,
+                        height: 100,
+                        lineColor: "#000",
+                    });
+
+                    // Afficher uniquement l'identifiant sous le Code-barres
+                    const legend = document.createElement("p");
+                    legend.className = "text-sm text-gray-600 mt-2";
+                    legend.textContent = `Matricule : ${employeeId}`; // Mot de passe non affiché !
+                    container.appendChild(legend);
+
+                    break;
             }
 
             // Stocker les données pour une utilisation ultérieure

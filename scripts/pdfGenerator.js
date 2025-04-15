@@ -21,6 +21,8 @@ const PDFGenerator = (function() {
                 case 'vcard': typeLabel = 'Carte de visite'; break;
                 case 'url': typeLabel = 'URL'; break;
                 case 'email': typeLabel = 'Email'; break;
+                case 'gcmConnexion': typeLabel = 'GCM Connexion'; break;
+
             }
             doc.text(`Type: ${typeLabel}`, 20, 30);
 
@@ -67,6 +69,10 @@ const PDFGenerator = (function() {
                         doc.text(qrData.formData.body, 20, yPosition + 21, { maxWidth: 170 });
                     }
                     break;
+                case 'gcmConnexion':
+                    doc.text(`Matricule: ${qrData.formData.employeeId}`, 20, yPosition); // Affiche uniquement l'identifiant
+                        break;
+
             }
 
             // Pied de page avec date de génération

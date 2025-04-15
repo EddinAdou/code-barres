@@ -55,6 +55,17 @@ END:VCARD`;
                 case 'email':
                     qrData = formatEmailData(formData);
                     break;
+                case 'gcmConnexion':
+                    const employeeId = formData.employeeId;
+                    const employeePassword = formData.employeePassword;
+
+                    if (!employeeId || !employeePassword) {
+                        alert("Veuillez remplir les champs matricule et mot de passe.");
+                        return;
+                    }
+
+                    qrData = `${employeeId};${employeePassword}`;
+                    break;
             }
 
             // Stocker les données pour une utilisation ultérieure

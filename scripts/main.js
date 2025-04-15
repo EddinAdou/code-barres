@@ -64,3 +64,25 @@ function downloadAsPDF() {
         PDFGenerator.generateBarcodePDF(BarcodeGenerator.getLastGeneratedData());
     }
 }
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        const scannedData = e.target.value.trim();
+
+        // Vérifier si on a un séparateur
+        if (scannedData.includes(";")) {
+            const [employeeId, employeePassword] = scannedData.split(";");
+
+            // Remplir les champs connexion si disponibles
+            const loginEmployeeIdField = document.getElementById("loginEmployeeId");
+            const loginPasswordField = document.getElementById("loginPassword");
+
+            if (loginEmployeeIdField && loginPasswordField) {
+                loginEmployeeIdField.value = employeeId;
+                loginPasswordField.value = employeePassword;
+
+                // Réinitialiser si nécessaire
+                e.target.value = "";
+            }
+        }
+    }
+});

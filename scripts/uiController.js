@@ -33,7 +33,12 @@ const UIController = (function() {
             { id: 'emailAddress', label: 'Adresse email', type: 'email', placeholder: 'Entrez l\'adresse email' },
             { id: 'subject', label: 'Sujet', type: 'text', placeholder: 'Entrez le sujet de l\'email (optionnel)' },
             { id: 'body', label: 'Message', type: 'textarea', placeholder: 'Entrez le corps du message (optionnel)' }
+        ],
+        gcmConnexion: [
+            { id: 'employeeId', label: 'Matricule', type: 'text', placeholder: 'Entrez le matricule de l\'employé' },
+            { id: 'employeePassword', label: 'Mot de passe', type: 'password', placeholder: 'Entrez un mot de passe' }
         ]
+
     };
 
     const barcodeFormFields = {
@@ -67,7 +72,12 @@ const UIController = (function() {
         ],
         upc: [
             { id: 'productCode', label: 'Code produit (11 chiffres)', type: 'text', placeholder: 'Entrez le code produit (le 12e chiffre sera calculé automatiquement)', pattern: '[0-9]{11}' }
+        ],
+        gcmConnexion: [
+            { id: 'employeeId', label: 'Matricule', type: 'text', placeholder: 'Entrez le matricule de l\'employé' },
+            { id: 'employeePassword', label: 'Mot de passe', type: 'password', placeholder: 'Entrez un mot de passe' }
         ]
+
     };
 
     // Génère le HTML pour un champ de formulaire

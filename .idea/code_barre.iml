@@ -11,5 +11,8 @@
     <orderEntry type="library" name="qrcodejs" level="application" />
     <orderEntry type="library" name="jspdf" level="application" />
     <orderEntry type="library" name="jsbarcode" level="application" />
+    <orderEntry type="library" name="qrcodejs" level="application" />
+    <orderEntry type="library" name="jsbarcode" level="application" />
+    <orderEntry type="library" name="jspdf" level="application" />
   </component>
 </module>
